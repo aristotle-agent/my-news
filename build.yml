@@ -1,0 +1,48 @@
+name: Refresh news
+on:
+  schedule:
+    - cron: '23 10,22 * * *'   # twice a day (about 5:23 AM and 5:23 PM Eastern)
+  workflow_dispatch: {}         # "Run workflow" button for a manual refresh
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+concurrency: refresh
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Restore last run's articles
+        uses: actions/cache@v4
+        with:
+          path: .cache/data.json
+          key: news-${{ github.run_id }}
+          restore-keys: news-
+      - run: node build.mjs
+      - name: Encrypt every page with your password
+        env:
+          PAGE_PASSWORD: ${{ secrets.PAGE_PASSWORD }}
+          PAGE_SALT: ${{ secrets.PAGE_SALT }}
+        run: |
+          npx staticrypt public -r -d site -p "$PAGE_PASSWORD" -s "$PAGE_SALT" -c false \
+            --remember 90 --short --template-title "My News" --template-instructions "Private page"
+          printf 'User-agent: *\nDisallow: /\n' > site/public/robots.txt
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/public
+      - uses: actions/deploy-pages@v4
+      - name: Keep the schedule alive
+        run: |
+          date -u +%FT%TZ > last-run.txt
+          git config user.name "news-bot"
+          git config user.email "news-bot@users.noreply.github.com"
+          git add last-run.txt && git commit -m "Refresh $(cat last-run.txt)" && git push || true
