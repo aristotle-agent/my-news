@@ -1,0 +1,44 @@
+[
+  {
+    "id": "fox",
+    "name": "Fox News",
+    "feed": "https://moxie.foxnews.com/google-publisher/latest.xml",
+    "accent": "#1f4e8c",
+    "limit": 20
+  },
+  {
+    "id": "gateway",
+    "name": "The Gateway Pundit",
+    "feed": "https://www.thegatewaypundit.com/feed/",
+    "accent": "#a33a2b",
+    "limit": 20
+  },
+  {
+    "id": "zerohedge",
+    "name": "ZeroHedge",
+    "feed": "https://feeds.feedburner.com/zerohedge/feed",
+    "accent": "#4a4a4a",
+    "limit": 20
+  },
+  {
+    "id": "warp",
+    "name": "The Angry Optimist",
+    "feed": "https://www.theangryoptimist.org/feed",
+    "accent": "#2a7f8f",
+    "limit": 20
+  },
+  {
+    "id": "positive",
+    "name": "Positive News",
+    "feed": "https://www.positive.news/feed/",
+    "accent": "#3c8d3c",
+    "limit": 20
+  },
+  {
+    "id": "gnn",
+    "name": "Good News Network",
+    "feed": "https://www.goodnewsnetwork.org/feed/",
+    "accent": "#c27c0e",
+    "limit": 20
+  }
+]
