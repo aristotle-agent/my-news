@@ -1,7 +1,7 @@
 name: Refresh news
 on:
   schedule:
-    - cron: '23 10,22 * * *'   # twice a day (about 5:23 AM and 5:23 PM Eastern)
+    - cron: '23 * * * *'   # twice a day (about 5:23 AM and 5:23 PM Eastern)
   workflow_dispatch: {}         # "Run workflow" button for a manual refresh
 permissions:
   contents: write
