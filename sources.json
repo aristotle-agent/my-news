@@ -40,5 +40,19 @@
     "feed": "https://www.goodnewsnetwork.org/feed/",
     "accent": "#c27c0e",
     "limit": 20
+  },
+  {
+    "id": "decoder",
+    "name": "AI Advances",
+    "feed": "https://the-decoder.com/feed/",
+    "accent": "#6a3fa0",
+    "limit": 20
+  },
+  {
+    "id": "medcity-ai",
+    "name": "Biotech & Medical AI",
+    "feed": "https://medcitynews.com/tag/artificial-intelligence/feed/",
+    "accent": "#0e7a6b",
+    "limit": 20
   }
 ]
