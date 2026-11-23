@@ -82,8 +82,37 @@ async function loadFeed(feeds) {
   throw lastErr;
 }
 
+// WordPress REST API source (Positive News): its /feed/ returns 403 to
+// automated pulls, but wp-json answers fine. Normalised to the same item
+// shape rss-parser returns, so buildSource works unchanged.
+async function loadWpJson(url, limit) {
+  const decode = (s = '') => new JSDOM(`<p>${s}</p>`).window.document.querySelector('p')?.textContent || '';
+  let lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': UA }, signal: AbortSignal.timeout(20000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const posts = await res.json();
+      return {
+        items: posts.slice(0, limit).map(p => {
+          const media = p._embedded?.['wp:featuredmedia']?.[0];
+          return {
+            title: decode(p.title?.rendered || ''),
+            link: p.link,
+            isoDate: p.date || null,
+            contentEncoded: p.content?.rendered || '',
+            contentSnippet: decode(p.excerpt?.rendered || ''),
+            mediaContent: media?.source_url ? [{ $: { url: media.source_url } }] : undefined,
+          };
+        }),
+      };
+    } catch (e) { lastErr = e; if (attempt < 3) await new Promise(r => setTimeout(r, 2000 * attempt)); }
+  }
+  throw lastErr;
+}
+
 async function buildSource(src, old) {
-  const feed = await loadFeed(src.feed);
+  const feed = src.type === 'wpjson' ? await loadWpJson(src.feed, src.limit) : await loadFeed(src.feed);
   const items = [];
   for (const item of feed.items.slice(0, src.limit)) {
     if (!item.link) continue;

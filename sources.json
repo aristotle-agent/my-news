@@ -30,9 +30,10 @@
   {
     "id": "positive",
     "name": "Positive News",
-    "feed": "https://www.positive.news/feed/",
+    "feed": "https://www.positive.news/wp-json/wp/v2/posts?per_page=20&_embed",
     "accent": "#3c8d3c",
-    "limit": 20
+    "limit": 20,
+    "type": "wpjson"
   },
   {
     "id": "gnn",
@@ -50,8 +51,8 @@
   },
   {
     "id": "medcity-ai",
-    "name": "Biotech & Medical AI",
-    "feed": "https://medcitynews.com/tag/artificial-intelligence/feed/",
+    "name": "Medical AI",
+    "feed": "https://hitconsultant.net/feed",
     "accent": "#0e7a6b",
     "limit": 20
   }
